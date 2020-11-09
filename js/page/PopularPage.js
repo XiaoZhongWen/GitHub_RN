@@ -5,22 +5,39 @@ import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
 export default class PopularPage extends Component {
 
-    render() {
+    constructor(props) {
+        super(props);
+        this.tabNames = ["Java", "iOS", "Android", "PHP", "React Native", "React"];
+    }
 
-        const TabNavigator = createAppContainer(createMaterialTopTabNavigator({
-            TopPopular1: {
-                screen: TopPopular,
+    generateTabs() {
+        const tabs = {};
+        this.tabNames.forEach((item, index) => {
+            tabs[`tab${index}`] = {
+                screen: props => <TopPopular {...props} tabLabel={item} />,
                 navigationOptions: {
-                    title: "top1"
-                }
-            },
-            TopPopular2: {
-                screen: TopPopular,
-                navigationOptions: {
-                    title: "top2"
+                    title: item
                 }
             }
-        }));
+        });
+        return tabs;
+    }
+
+    render() {
+        const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
+            this.generateTabs(),{
+                tabBarOptions: {
+                    tabStyle: styles.tabStyle,
+                    scrollEnabled: true,
+                    upperCaseLabel: false,
+                    style: {
+                        backgroundColor: "#a67"
+                    },
+                    indicatorStyle: styles.indicatorStyle,
+                    labelStyle: styles.labelStyle
+                }
+            }
+        ));
 
         return (
             <View style={styles.container}>
@@ -34,7 +51,7 @@ class TopPopular extends Component {
     render() {
         return (
             <View>
-                <Text>TopPopular</Text>
+                <Text>{this.props.tabLabel}</Text>
             </View>
         );
     }
@@ -45,4 +62,16 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 40
     },
+    tabStyle:{
+        minWidth: 50
+    },
+    indicatorStyle: {
+        height: 2,
+        backgroundColor: "white"
+    },
+    labelStyle: {
+        fontSize: 13,
+        marginTop: 6,
+        marginBottom: 6
+    }
 });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 export default class TrendingPage extends Component {
 
@@ -14,8 +14,20 @@ export default class TrendingPage extends Component {
     }
 
     render() {
+        const {navigation} = this.props;
         return (
             <View style={styles.container}>
+                <Button 
+                    title="orange"
+                    onPress={()=>{
+                        navigation.setParams({
+                            theme: {
+                                tintColor: "orange",
+                                updateTime: new Date().getTime()
+                            }
+                        });
+                    }}
+                />
                 <Text>Trending Page</Text>
             </View>
         );
