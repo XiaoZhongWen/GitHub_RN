@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { exp } from 'react-native/Libraries/Animated/src/Easing';
 import { createAppContainer } from 'react-navigation';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import { connect } from 'react-redux';
 
-export default class PopularPage extends Component {
+class PopularPage extends Component {
 
     constructor(props) {
         super(props);
@@ -75,3 +77,9 @@ const styles = StyleSheet.create({
         marginBottom: 6
     }
 });
+
+const mapDispatchToProps = dispatch => ({
+
+});
+
+export default connect(mapDispatchToProps)(PopularPage)

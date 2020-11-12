@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 
-export default class MyPage extends Component {
+class MyPage extends Component {
 
     componentDidMount() {
         this.timer = setTimeout(() => {
@@ -29,3 +30,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
+
+const mapDispatchToProps = dispatch => ({
+
+});
+
+export default connect(mapDispatchToProps)(MyPage)

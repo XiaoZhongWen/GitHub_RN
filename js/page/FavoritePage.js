@@ -1,9 +1,11 @@
 
 import React, { Component } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import NavigationUtil from '../Navigator/NavigationUtil'
+import NavigationUtil from '../Navigator/NavigationUtil';
 
-export default class FavoritePage extends Component {
+import { connect } from 'react-redux';
+
+class FavoritePage extends Component {
 
     componentDidMount() {
         this.timer = setTimeout(() => {
@@ -37,3 +39,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
+
+const mapDispatchToProps = dispatch => ({
+
+});
+
+export default connect(null, mapDispatchToProps)(FavoritePage)

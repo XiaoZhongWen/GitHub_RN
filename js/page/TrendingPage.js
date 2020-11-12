@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 
-export default class TrendingPage extends Component {
+import actions from '../action';
+
+class TrendingPage extends Component {
 
     componentDidMount() {
         this.timer = setTimeout(() => {
@@ -19,14 +22,7 @@ export default class TrendingPage extends Component {
             <View style={styles.container}>
                 <Button 
                     title="orange"
-                    onPress={()=>{
-                        navigation.setParams({
-                            theme: {
-                                tintColor: "orange",
-                                updateTime: new Date().getTime()
-                            }
-                        });
-                    }}
+                    onPress={() => this.props.onThemeChange("orange")}
                 />
                 <Text>Trending Page</Text>
             </View>
@@ -41,3 +37,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
+
+const mapDispatchToProps = dispatch => ({
+    onThemeChange: theme => dispatch(actions.onThemeChange(theme))
+});
+
+export default connect(null, mapDispatchToProps)(TrendingPage);
