@@ -3,12 +3,13 @@ import { AsyncStorage } from 'react-native';
 export default class DataStore {
     saveData(url, data, callback) {
         if (!data || !url) {
-            AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)), callback);
+            return;
         }
+        AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)), callback);
     }
 
     fetchLocalData(url) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             AsyncStorage.getItem(url, (error, result) => {
                 if (!error) {
                     try {
@@ -26,7 +27,7 @@ export default class DataStore {
     }
 
     fetchNetData(url) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             fetch(url).then((response) => {
                 if (response.ok) {
                     return response.json();
@@ -43,7 +44,7 @@ export default class DataStore {
     }
 
     fetchData(url) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             this.fetchLocalData(url).then((wrapData) => {
                 if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {
                     resolve(wrapData);
