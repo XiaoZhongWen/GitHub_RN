@@ -8,11 +8,10 @@ import Toast from 'react-native-easy-toast';
 import PopularItem from '../common/PopularItem';
 import actions from '../action';
 import NavigationBar from '../common/NavigationBar';
+import Setting from '../common/setting';
 
 const URL = "https://api.github.com/search/repositories?q=";
 const QUERY_STR = "&sort=stars";
-const THEME_COLOR = "#678";
-const PAGESIZE = 10;
 
 export default class PopularPage extends Component {
 
@@ -37,14 +36,14 @@ export default class PopularPage extends Component {
     render() {
 
         let statusBar = {
-            backgroundColor: THEME_COLOR,
+            backgroundColor: Setting.THEME_COLOR,
             barStyle: 'light-content'
         };
         let navigationBar = <NavigationBar
             title={"最热"}
             statusBar={statusBar}
             style={{
-                backgroundColor:THEME_COLOR
+                backgroundColor:Setting.THEME_COLOR
             }}
         />
 
@@ -55,7 +54,7 @@ export default class PopularPage extends Component {
                     scrollEnabled: true,
                     upperCaseLabel: false,
                     style: {
-                        backgroundColor: THEME_COLOR
+                        backgroundColor: Setting.THEME_COLOR
                     },
                     indicatorStyle: styles.indicatorStyle,
                     labelStyle: styles.labelStyle
@@ -89,11 +88,11 @@ class TopPopular extends Component {
         const store = this._store();
         const url = this.urlWithStoreName(this.storeName);
         if (loadMore) {
-            onLoadMorePopular(this.storeName, ++store.pageIndex, PAGESIZE, store.items, callback => {
+            onLoadMorePopular(this.storeName, ++store.pageIndex, Setting.PAGESIZE, store.items, callback => {
                 this.refs.toast.show("没有更多了");
             });
         } else {
-            onLoadPopularData(this.storeName, url, PAGESIZE);
+            onLoadPopularData(this.storeName, url, Setting.PAGESIZE);
         }
     }
 
@@ -152,11 +151,11 @@ class TopPopular extends Component {
                     refreshControl={
                         <RefreshControl
                             title={"loading"}
-                            titleColor={THEME_COLOR}
-                            colors={[THEME_COLOR]}
+                            titleColor={Setting.THEME_COLOR}
+                            colors={[Setting.THEME_COLOR]}
                             refreshing={store.isLoading}
                             onRefresh={() => this.loadData()}
-                            titleColor={THEME_COLOR}
+                            titleColor={Setting.THEME_COLOR}
                         />
                     }
                     ListFooterComponent={() => this.generateIndicator()}
@@ -184,8 +183,7 @@ const TopPopularPage = connect(mapStateToProps, mapDispatchToProps)(TopPopular);
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        marginTop: 40
+        flex: 1
     },
     tabStyle:{
         minWidth: 50

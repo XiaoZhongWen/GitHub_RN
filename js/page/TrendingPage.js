@@ -1,30 +1,72 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Settings, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-
+import { createAppContainer } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import NavigationBar from '../common/NavigationBar';
+import Setting from '../common/setting';
 import actions from '../action';
 
-class TrendingPage extends Component {
+export default class TrendingPage extends Component {
 
-    componentDidMount() {
-        this.timer = setTimeout(() => {
-            
-        }, 2000);
+    constructor(props) {
+        super(props);
+        this.tabNames = ["All", "Java", "C", "JavaScript", "PHP"];
     }
 
-    componentWillUnmount() {
-        this.timer && clearTimeout(this.timer);
+    generateTabs() {
+        let tabs = {};
+        this.tabNames.forEach((item ,index) => {
+            tabs[`tab${index}`] = {
+                screen: props => <TopTrending {...props} tabLabel={item} />,
+                navigationOptions: {
+                    title: item
+                }
+            }
+        });
+        return tabs;
     }
 
     render() {
-        const {navigation} = this.props;
+
+        const statusBar = {
+            barStyle:"light-content",
+            hidden: false
+        }
+        const navigationBar = <NavigationBar 
+            title={"趋势"}
+            statusBar={statusBar}
+            style={{backgroundColor: Setting.THEME_COLOR}}
+        />
+
+        const TabNavigator = createAppContainer(createMaterialTopTabNavigator(this.generateTabs(),{
+            tabBarOptions: {
+                scrollEnabled: true,
+                upperCaseLabel: false
+            }
+        }));
+
         return (
             <View style={styles.container}>
-                <Button 
-                    title="orange"
-                    onPress={() => this.props.onThemeChange("orange")}
-                />
-                <Text>Trending Page</Text>
+                {navigationBar}
+                <TabNavigator />
+            </View>
+        );
+    }
+}
+
+class TopTrendingPage extends Component {
+
+    constructor(props) {
+        super(props);
+        const { tabLabel } = props;
+        this.tabName = tabLabel;
+    }
+
+    render() {
+        return (
+            <View>
+                <Text>{this.tabName}</Text>
             </View>
         );
     }
@@ -32,14 +74,13 @@ class TrendingPage extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        flex: 1
     }
 });
 
 const mapDispatchToProps = dispatch => ({
-    onThemeChange: theme => dispatch(actions.onThemeChange(theme))
+    onLoadTrendingData: (storeName, url, pageSize) => dispatch(actions.onLoadTrendingData(storeName, url, pageSize))
 });
 
-export default connect(null, mapDispatchToProps)(TrendingPage);
+const TopTrending = connect(null, mapDispatchToProps)(TopTrendingPage);
+
