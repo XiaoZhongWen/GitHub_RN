@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Settings, StyleSheet, Text, View, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import { Button, Settings, StyleSheet, Text, View, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
@@ -7,8 +7,10 @@ import NavigationBar from '../common/NavigationBar';
 import TrendingItem from '../common/TrendingItem';
 import Setting from '../common/setting';
 import actions from '../action';
-import { State } from 'react-native-gesture-handler';
+import TrendingDialog, {TimeSpans} from '../common/TrendingDialog';
+import TimeSpan from '../modal/TimeSpan';
 import Toast from 'react-native-easy-toast';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const URL = "https://github.com/trending/";
 const QUERY_STR = "?since=daily";
@@ -18,6 +20,9 @@ export default class TrendingPage extends Component {
     constructor(props) {
         super(props);
         this.tabNames = ["All", "Java", "C", "JavaScript", "PHP"];
+        this.state = {
+            timeSpan: TimeSpans[0]
+        };
     }
 
     generateTabs() {
@@ -33,13 +38,37 @@ export default class TrendingPage extends Component {
         return tabs;
     }
 
+    renderTrendingDialog() {
+        return (
+            <TrendingDialog ref={dialog=>this.dialog=dialog} />
+        );
+    }
+
+    renderTitleView() {
+        return (
+            <TouchableOpacity
+                onPress={() => this.dialog.show()}
+            >
+                <View style={styles.row}>
+                    <Text style={styles.title}>趋势 </Text>
+                    <Text style={styles.title}>{this.state.timeSpan.showText}</Text>
+                    <MaterialIcons
+                        name={"arrow-drop-up"}
+                        size={16}
+                        color={'white'}
+                    />
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
         const statusBar = {
             barStyle:"light-content",
             hidden: false
         }
         const navigationBar = <NavigationBar 
-            title={"趋势"}
+            titleView={this.renderTitleView()}
             statusBar={statusBar}
             style={{backgroundColor: Setting.THEME_COLOR}}
         />
@@ -61,6 +90,7 @@ export default class TrendingPage extends Component {
             <View style={styles.container}>
                 {navigationBar}
                 <TabNavigator />
+                {this.renderTrendingDialog()}
             </View>
         );
     }
@@ -173,6 +203,15 @@ const styles = StyleSheet.create({
     indicator:{
         color: 'red',
         margin: 10
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 18,
+        color: 'white'
     }
 });
 
