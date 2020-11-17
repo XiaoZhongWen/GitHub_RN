@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, Image } from 'react-native';
 import NavigationUtil from '../Navigator/NavigationUtil';
 
 import { connect } from 'react-redux';

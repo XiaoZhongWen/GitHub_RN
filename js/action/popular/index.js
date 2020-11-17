@@ -1,5 +1,5 @@
 import Types from '../types';
-import DataStore from "../../expand/dao/DataStore";
+import DataStore, { FLAG_PAGE } from "../../expand/dao/DataStore";
 
 export function onLoadPopularData(storeName, url, pageSize) {
     return dispatch => {
@@ -8,7 +8,7 @@ export function onLoadPopularData(storeName, url, pageSize) {
             storeName: storeName
         });
         const dataStore = new DataStore();
-        dataStore.fetchData(url).then(data => {
+        dataStore.fetchData(url, FLAG_PAGE.FLAG_PAGE_POPULAR).then(data => {
             handleData(dispatch, data, storeName, pageSize);
         }).catch(error => {
             dispatch({

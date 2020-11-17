@@ -155,7 +155,6 @@ class TopPopular extends Component {
                             colors={[Setting.THEME_COLOR]}
                             refreshing={store.isLoading}
                             onRefresh={() => this.loadData()}
-                            titleColor={Setting.THEME_COLOR}
                         />
                     }
                     ListFooterComponent={() => this.generateIndicator()}
