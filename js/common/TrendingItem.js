@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import BaseItem, {renderFavoriteButton} from './BaseItem';
 
-export default class TrendingItem extends Component {
+export default class TrendingItem extends BaseItem {
     render() {
         const {item, onSelect} = this.props;
         return (
@@ -34,13 +35,7 @@ export default class TrendingItem extends Component {
                             <Text>{'stars:' + item.starCount}</Text>
                         </View>
                         {/* star icon */}
-                        <View>
-                            <FontAwesome
-                                name={'star-o'}
-                                size={26}
-                                color={'red'}
-                            />
-                        </View>
+                        {this.renderFavoriteButton()}
                     </View>
                 </View>
             </TouchableOpacity>

@@ -146,6 +146,7 @@ class TopPopular extends Component {
         return (
             <PopularItem
                 item={item}
+                isFavorite={data.isFavorite}
                 onSelect={() => {
                     this.onSelect({
                         type: FLAG_PAGE.FLAG_PAGE_POPULAR,

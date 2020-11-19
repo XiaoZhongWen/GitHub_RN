@@ -212,6 +212,7 @@ class TopTrendingPage extends Component {
         return (
             <TrendingItem
                 item={item}
+                isFavorite={data.isFavorite}
                 onSelect={() => {
                     this.onSelect({
                         type: FLAG_PAGE.FLAG_PAGE_TRENDING,
