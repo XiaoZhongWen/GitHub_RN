@@ -1,46 +1,49 @@
 import React, {Component} from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default class TrendingItem extends Component {
     render() {
-
-        const {item} = this.props;
+        const {item, onSelect} = this.props;
         return (
-            <View style={styles.container}>
-                {/* title */}
-                <View>
-                    <Text style={styles.title}>{item.fullName}</Text>
-                </View>
-                {/* description */}
-                <View>
-                    <Text style={styles.description}>{item.description}</Text>
-                </View>
-                {/* bottom */}
-                <View style={styles.row}>
-                    {/* Authors */}
+            <TouchableOpacity onPress={onSelect} underLayColor="transparent">
+                <View style={styles.container}>
+                    {/* title */}
+                    <View>
+                        <Text style={styles.title}>{item.fullName}</Text>
+                    </View>
+                    {/* description */}
+                    <View>
+                        <Text style={styles.description}>
+                            {item.description}
+                        </Text>
+                    </View>
+                    {/* bottom */}
                     <View style={styles.row}>
-                        <Text>Author:</Text>
-                        {
-                            item.contributors.map((url, index) => {
-                                return <Image key={index} source={{uri:url}} />
-                            })
-                        }
-                    </View>
-                    {/* stars */}
-                    <View>
-                        <Text>{"stars:" + item.starCount}</Text>
-                    </View>
-                    {/* star icon */}
-                    <View>
-                        <FontAwesome
-                            name={"star-o"}
-                            size={26}
-                            color={"red"}
-                        />
+                        {/* Authors */}
+                        <View style={styles.row}>
+                            <Text>Author:</Text>
+                            {item.contributors.map((url, index) => {
+                                return (
+                                    <Image key={index} source={{uri: url}} />
+                                );
+                            })}
+                        </View>
+                        {/* stars */}
+                        <View>
+                            <Text>{'stars:' + item.starCount}</Text>
+                        </View>
+                        {/* star icon */}
+                        <View>
+                            <FontAwesome
+                                name={'star-o'}
+                                size={26}
+                                color={'red'}
+                            />
+                        </View>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }
@@ -58,10 +61,10 @@ const styles = StyleSheet.create({
         shadowColor: 'gray',
         shadowOffset: {
             width: 0.5,
-            height: 0.5
+            height: 0.5,
         },
         shadowOpacity: 0.4,
-        shadowRadius: 1
+        shadowRadius: 1,
     },
     title: {
         fontSize: 16,
@@ -76,6 +79,6 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+    },
 });

@@ -34,9 +34,11 @@ export default class TrendingDialog extends Component {
                 visible={this.state.visible}
                 onRequestClose={() => onClose}
             >
-                <TouchableOpacity 
+                <TouchableOpacity
+                    underlayColor='transparent'
                     style={styles.container}
                     onPress={() => this.dismiss()}
+                    
                 >
                     <MaterialIcons
                         name={"arrow-drop-up"}
@@ -49,6 +51,7 @@ export default class TrendingDialog extends Component {
                             TimeSpans.map((timeSpan, index) => {
                                 return (
                                     <TouchableOpacity
+                                        underlayColor='transparent'
                                         onPress={() => onSelect(timeSpan)}
                                     >
                                         <View style={styles.text_container}>
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     arrow: {
-        marginTop: 40.0,
+        marginTop: 70.0,
         color: 'white',
         padding: 0,
         margin: -18
