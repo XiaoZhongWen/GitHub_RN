@@ -5,7 +5,7 @@ import BaseItem, {renderFavoriteButton} from './BaseItem';
 
 export default class PopularItem extends BaseItem {
     render() {
-        const {item} = this.props;
+        const {item} = this.props.item;
         if (!item || !item.owner) {
             return null;
         }

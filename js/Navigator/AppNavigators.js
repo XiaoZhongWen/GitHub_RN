@@ -6,6 +6,8 @@ import DetailPage from '../page/DetailPage';
 
 
 const InitNavigator = createStackNavigator({
+
+    
     Welcome: {
         screen: WelcomePage,
         navigationOptions: {

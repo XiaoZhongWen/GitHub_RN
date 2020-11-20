@@ -6,17 +6,18 @@ import BaseItem, {renderFavoriteButton} from './BaseItem';
 export default class TrendingItem extends BaseItem {
     render() {
         const {item, onSelect} = this.props;
+        const data = item.item;
         return (
             <TouchableOpacity onPress={onSelect} underLayColor="transparent">
                 <View style={styles.container}>
                     {/* title */}
                     <View>
-                        <Text style={styles.title}>{item.fullName}</Text>
+                        <Text style={styles.title}>{data.fullName}</Text>
                     </View>
                     {/* description */}
                     <View>
                         <Text style={styles.description}>
-                            {item.description}
+                            {data.description}
                         </Text>
                     </View>
                     {/* bottom */}
@@ -24,7 +25,7 @@ export default class TrendingItem extends BaseItem {
                         {/* Authors */}
                         <View style={styles.row}>
                             <Text>Author:</Text>
-                            {item.contributors.map((url, index) => {
+                            {data.contributors.map((url, index) => {
                                 return (
                                     <Image key={index} source={{uri: url}} />
                                 );
@@ -32,7 +33,7 @@ export default class TrendingItem extends BaseItem {
                         </View>
                         {/* stars */}
                         <View>
-                            <Text>{'stars:' + item.starCount}</Text>
+                            <Text>{'stars:' + data.starCount}</Text>
                         </View>
                         {/* star icon */}
                         {this.renderFavoriteButton()}

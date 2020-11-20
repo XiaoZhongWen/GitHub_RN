@@ -17,17 +17,17 @@ export default class DetailPage extends Component {
 
         switch (this.params.type) {
             case FLAG_PAGE.FLAG_PAGE_POPULAR:
-                const link = this.params.data.html_url;
+                const link = this.params.data.item.html_url;
                 this.state = {
-                    title: this.params.data.full_name,
+                    title: this.params.data.item.full_name,
                     url: link,
                     canGoBack: false,
                 };
                 break;
             case FLAG_PAGE.FLAG_PAGE_TRENDING:
-                const url = TRENDING_URL + this.params.data.fullName;
+                const url = TRENDING_URL + this.params.data.item.fullName;
                 this.state = {
-                    title: this.params.data.fullName,
+                    title: this.params.data.item.fullName,
                     url: url,
                     canGoBack: false,
                 };

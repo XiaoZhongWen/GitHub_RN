@@ -18,7 +18,7 @@ import NavigationBar from '../common/NavigationBar';
 import Setting from '../common/setting';
 import NavigationUtil from '../Navigator/NavigationUtil';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
-
+import FavoriteService from '../service/FavoriteService';
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 
@@ -141,16 +141,23 @@ class TopPopular extends Component {
         NavigationUtil.goPage(data, 'Detail');
     }
 
+    onFavorite(item, isFavorite) {
+        FavoriteService.updateFavorite(
+            item,
+            isFavorite,
+            FLAG_PAGE.FLAG_PAGE_POPULAR,
+        );
+    }
+
     renderItem(data) {
-        const item = data.item;
         return (
             <PopularItem
-                item={item}
-                isFavorite={data.isFavorite}
+                item={data}
+                onFavorite={this.onFavorite}
                 onSelect={() => {
                     this.onSelect({
                         type: FLAG_PAGE.FLAG_PAGE_POPULAR,
-                        data: item,
+                        data: data,
                     });
                 }}
             />

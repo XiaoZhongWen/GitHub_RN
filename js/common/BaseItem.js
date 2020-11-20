@@ -11,13 +11,37 @@ export default class BaseItem extends Component {
         };
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const isFavorite = nextProps.item.isFavorite;
+        if (isFavorite !== prevState.isFavorite) {
+            return {
+                isFavorite: isFavorite,
+            };
+        } else {
+            return null;
+        }
+    }
+
+    setFavoriteState(isFavorite) {
+        this.props.item.isFavorite = isFavorite;
+        this.setState({
+            isFavorite: isFavorite,
+        });
+    }
+
+    onFavorite() {
+        this.setFavoriteState(!this.state.isFavorite);
+        this.props.onFavorite(this.props.item.item, !this.state.isFavorite);
+    }
+
     renderFavoriteButton() {
         return (
             <TouchableOpacity
+                onPress={() => this.onFavorite()}
                 style={{padding: 6}}
                 underlayColor={'transparent'}>
                 <FontAwesome
-                    name={'star-o'}
+                    name={this.state.isFavorite ? 'star' : 'star-o'}
                     size={26}
                     style={{color: Setting.THEME_COLOR}}
                 />

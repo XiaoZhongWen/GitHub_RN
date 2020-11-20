@@ -207,16 +207,19 @@ class TopTrendingPage extends Component {
         NavigationUtil.goPage(data, 'Detail');
     }
 
+    onFavorite() {
+        console.log('trending onFavorite');
+    }
+
     renderItem_(data) {
-        const item = data.item;
         return (
             <TrendingItem
-                item={item}
-                isFavorite={data.isFavorite}
+                item={data}
+                onFavorite={this.onFavorite}
                 onSelect={() => {
                     this.onSelect({
                         type: FLAG_PAGE.FLAG_PAGE_TRENDING,
-                        data: item,
+                        data: data,
                     });
                 }}
             />
