@@ -7,7 +7,7 @@ export default class BaseItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFavorite: this.props.isFavorite,
+            isFavorite: this.props.item.isFavorite,
         };
     }
 
@@ -32,6 +32,12 @@ export default class BaseItem extends Component {
     onFavorite() {
         this.setFavoriteState(!this.state.isFavorite);
         this.props.onFavorite(this.props.item.item, !this.state.isFavorite);
+    }
+
+    onItemClick() {
+        this.props.onSelect((isFavorite) => {
+            this.setFavoriteState(isFavorite);
+        });
     }
 
     renderFavoriteButton() {

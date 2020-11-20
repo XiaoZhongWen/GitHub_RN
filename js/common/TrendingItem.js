@@ -6,9 +6,14 @@ import BaseItem, {renderFavoriteButton} from './BaseItem';
 export default class TrendingItem extends BaseItem {
     render() {
         const {item, onSelect} = this.props;
+        if (!item || !item.item) {
+            return null;
+        }
         const data = item.item;
         return (
-            <TouchableOpacity onPress={onSelect} underLayColor="transparent">
+            <TouchableOpacity
+                onPress={() => this.onItemClick()}
+                underLayColor="transparent">
                 <View style={styles.container}>
                     {/* title */}
                     <View>

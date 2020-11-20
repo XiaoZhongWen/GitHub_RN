@@ -9,7 +9,7 @@ function isFavorite(item, keys, flag) {
     let key = '';
     switch (flag) {
         case FLAG_PAGE.FLAG_PAGE_POPULAR:
-            key = item.id;
+            key = item.id.toString();
             break;
         case FLAG_PAGE.FLAG_PAGE_TRENDING:
             key = item.fullName;

@@ -23,6 +23,10 @@ export default class FavoriteService {
         if (favoriteDao === null || key === null) {
             return;
         }
-        favoriteDao.setFavorite(key, item);
+        if (isFavorite) {
+            favoriteDao.setFavorite(key, item);
+        } else {
+            favoriteDao.removeFavorite(key);
+        }
     }
 }

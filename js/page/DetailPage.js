@@ -7,6 +7,7 @@ import NavigationUtil from '../Navigator/NavigationUtil';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
 import Setting from '../common/setting';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FavoriteService from '../service/FavoriteService';
 
 const TRENDING_URL = 'https://github.com/';
 
@@ -22,6 +23,7 @@ export default class DetailPage extends Component {
                     title: this.params.data.item.full_name,
                     url: link,
                     canGoBack: false,
+                    isFavorite: this.params.data.isFavorite,
                 };
                 break;
             case FLAG_PAGE.FLAG_PAGE_TRENDING:
@@ -30,6 +32,7 @@ export default class DetailPage extends Component {
                     title: this.params.data.item.fullName,
                     url: url,
                     canGoBack: false,
+                    isFavorite: this.params.data.isFavorite,
                 };
                 break;
             default:
@@ -45,12 +48,25 @@ export default class DetailPage extends Component {
         }
     }
 
+    onFavorite() {
+        this.params.data.isFavorite = !this.params.data.isFavorite;
+        const {item, isFavorite} = this.params.data;
+        const {type, callback} = this.params;
+        callback(isFavorite);
+        this.setState({
+            isFavorite: isFavorite,
+        });
+        FavoriteService.updateFavorite(item, isFavorite, type);
+    }
+
     renderRightButton() {
         return (
             <View style={styles.right}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    underLayColor="transparent"
+                    onPress={() => this.onFavorite()}>
                     <FontAwesome
-                        name="star-o"
+                        name={this.state.isFavorite ? 'star' : 'star-o'}
                         size={20}
                         style={{
                             color: 'white',

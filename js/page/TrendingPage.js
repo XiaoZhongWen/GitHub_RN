@@ -26,6 +26,7 @@ import Toast from 'react-native-easy-toast';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
 import NavigationUtil from '../Navigator/NavigationUtil';
+import FavoriteService from '../service/FavoriteService';
 
 const URL = 'https://github.com/trending/';
 const QUERY_STR = '?since=daily';
@@ -207,8 +208,12 @@ class TopTrendingPage extends Component {
         NavigationUtil.goPage(data, 'Detail');
     }
 
-    onFavorite() {
-        console.log('trending onFavorite');
+    onFavorite(item, isFavorite) {
+        FavoriteService.updateFavorite(
+            item,
+            isFavorite,
+            FLAG_PAGE.FLAG_PAGE_TRENDING,
+        );
     }
 
     renderItem_(data) {
@@ -216,10 +221,11 @@ class TopTrendingPage extends Component {
             <TrendingItem
                 item={data}
                 onFavorite={this.onFavorite}
-                onSelect={() => {
+                onSelect={(callback) => {
                     this.onSelect({
                         type: FLAG_PAGE.FLAG_PAGE_TRENDING,
                         data: data,
+                        callback,
                     });
                 }}
             />

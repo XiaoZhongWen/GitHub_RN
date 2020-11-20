@@ -154,10 +154,11 @@ class TopPopular extends Component {
             <PopularItem
                 item={data}
                 onFavorite={this.onFavorite}
-                onSelect={() => {
+                onSelect={(callback) => {
                     this.onSelect({
                         type: FLAG_PAGE.FLAG_PAGE_POPULAR,
                         data: data,
+                        callback,
                     });
                 }}
             />
