@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
+import EventBus from 'react-native-event-bus';
 import NavigationBar from '../common/NavigationBar';
 import NavigationUtil from '../Navigator/NavigationUtil';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
@@ -10,6 +11,7 @@ import TrendingItem from '../common/TrendingItem';
 import Setting from '../common/setting';
 import actions from '../action';
 import FavoriteService from '../service/FavoriteService';
+import EventTypes from '../common/Event';
 
 import {connect} from 'react-redux';
 
@@ -80,12 +82,24 @@ export default class FavoritePage extends Component {
 
 class TopFavorite extends Component {
     componentDidMount() {
-        this.loadData();
+        this.loadData(true);
+        EventBus.getInstance().addListener(
+            EventTypes.EVENT_TYPE_TAB_SELECT_CHANGE,
+            (this.listener = (data) => {
+                if (data.to === 'FavoritePage') {
+                    this.loadData(false);
+                }
+            }),
+        );
     }
 
-    loadData() {
+    componentWillUnmount() {
+        EventBus.getInstance().removeListener(this.listener);
+    }
+
+    loadData(isRefresh) {
         const {onLoadFavoriteData, type} = this.props;
-        onLoadFavoriteData(type);
+        onLoadFavoriteData(type, isRefresh);
     }
 
     _store() {
@@ -102,7 +116,19 @@ class TopFavorite extends Component {
 
     onFavorite(item, isFavorite, type) {
         FavoriteService.updateFavorite(item, isFavorite, this.props.type);
-        this.loadData();
+        if (type === FLAG_PAGE.FLAG_PAGE_POPULAR) {
+            EventBus.getInstance().fireEvent(
+                EventTypes.EVENT_TYPE_POPULAR_FAVORITE_CHANGE,
+                {
+                    item: item,
+                    isFavorite: isFavorite,
+                },
+            );
+        } else if (type === FLAG_PAGE.FLAG_PAGE_TRENDING) {
+            EventBus.getInstance().fireEvent(
+                EventTypes.EVENT_TYPE_TRENDING_FAVORITE_CHANGE,
+            );
+        }
     }
 
     onSelect(data) {
@@ -178,7 +204,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onLoadFavoriteData: (flag) => dispatch(actions.onLoadFavoriteData(flag)),
+    onLoadFavoriteData: (flag, isRefresh) =>
+        dispatch(actions.onLoadFavoriteData(flag, isRefresh)),
 });
 
 const TopFavoritePage = connect(

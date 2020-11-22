@@ -2,12 +2,14 @@ import FavoriteDao from '../../expand/dao/FavoriteDao';
 import ProjectModal from '../../modal/ProjectModal';
 import Types from '../types';
 
-export function onLoadFavoriteData(flag) {
+export function onLoadFavoriteData(flag, isRefresh) {
     return (dispatch) => {
-        dispatch({
-            type: Types.FAVORITE_REFRESH,
-            favoriteName: flag,
-        });
+        if (isRefresh) {
+            dispatch({
+                type: Types.FAVORITE_REFRESH,
+                favoriteName: flag,
+            });
+        }
 
         const favoriteDao = new FavoriteDao(flag);
         favoriteDao

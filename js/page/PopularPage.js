@@ -12,6 +12,8 @@ import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import {connect} from 'react-redux';
 import Toast from 'react-native-easy-toast';
+import EventBus from 'react-native-event-bus';
+import EventTypes from '../common/Event';
 import PopularItem from '../common/PopularItem';
 import actions from '../action';
 import NavigationBar from '../common/NavigationBar';
@@ -19,6 +21,7 @@ import Setting from '../common/setting';
 import NavigationUtil from '../Navigator/NavigationUtil';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
 import FavoriteService from '../service/FavoriteService';
+import {onFlushPopularData} from '../action/popular';
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 
@@ -94,10 +97,50 @@ class TopPopular extends Component {
         super(props);
         const {tabLabel} = this.props;
         this.storeName = tabLabel;
+        this.favoriteDidChanged = false;
     }
 
     componentDidMount() {
         this.loadData();
+
+        EventBus.getInstance().addListener(
+            EventTypes.EVENT_TYPE_POPULAR_FAVORITE_CHANGE,
+            (this.favoriteChangeListener = (data) => {
+                const id = data.item.id;
+                const isFavorite = data.isFavorite;
+                let store = this._store();
+
+                for (let index = 0; index < store.items.length; index++) {
+                    const element = store.items[index];
+                    if (element.item.id === id) {
+                        element.isFavorite = isFavorite;
+                        break;
+                    }
+                }
+                this.favoriteDidChanged = true;
+            }),
+        );
+        EventBus.getInstance().addListener(
+            EventTypes.EVENT_TYPE_TAB_SELECT_CHANGE,
+            (this.tabSelectChangeListener = (data) => {
+                if (data.to === 'PopularPage' && this.favoriteDidChanged) {
+                    this.favoriteDidChanged = false;
+                    const store = this._store();
+                    const {onFlushPopularData} = this.props;
+                    onFlushPopularData(
+                        this.storeName,
+                        store.pageIndex,
+                        Setting.PAGESIZE,
+                        store.items,
+                    );
+                }
+            }),
+        );
+    }
+
+    componentWillUnmount() {
+        EventBus.getInstance().removeListener(this.favoriteChangeListener);
+        EventBus.getInstance().removeListener(this.tabSelectChangeListener);
     }
 
     loadData(loadMore) {
@@ -221,6 +264,10 @@ const mapDispatchToProps = (dispatch) => ({
                 items,
                 callback,
             ),
+        ),
+    onFlushPopularData: (storeName, pageIndex, pageSize, items) =>
+        dispatch(
+            actions.onFlushPopularData(storeName, pageIndex, pageSize, items),
         ),
 });
 

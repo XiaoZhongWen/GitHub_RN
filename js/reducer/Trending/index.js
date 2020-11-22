@@ -4,16 +4,16 @@ const defaultAction = {};
 export default function onAction(state = defaultAction, action) {
     switch (action.type) {
         case Types.TRENDING_REFRESH:
-            return ({
+            return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
                     hideLoadingMore: true,
-                    isLoading: true
-                }
-            });
+                    isLoading: true,
+                },
+            };
         case Types.TRENDING_REFRESH_SUCCESS:
-            return ({
+            return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
@@ -21,35 +21,42 @@ export default function onAction(state = defaultAction, action) {
                     isLoading: false,
                     items: action.items,
                     projectModes: action.projectModes,
-                    pageIndex: action.pageIndex
-                }
-            });
+                    pageIndex: action.pageIndex,
+                },
+            };
         case Types.TRENDING_REFRESH_FAIL:
-            return ({
+            return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
                     hideLoadingMore: true,
-                    isLoading: false
-                }
-            });
+                    isLoading: false,
+                },
+            };
         case Types.TRENDING_LOAD_MORE_FAIL:
-            return ({
+            return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
-                    hideLoadingMore: true
-                }
-            });
+                    hideLoadingMore: true,
+                },
+            };
         case Types.TRENDING_LOAD_MORE_SUCCESS:
-            return ({
+            return {
                 ...state,
                 [action.storeName]: {
                     ...state[action.storeName],
                     projectModes: action.projectModes,
-                    hideLoadingMore: false
-                }
-            });
+                    hideLoadingMore: false,
+                },
+            };
+        case Types.FLUSH_TRENDING_DATA:
+            return {
+                ...state,
+                [action.storeName]: {
+                    ...state[action.storeName],
+                },
+            };
         default:
             return state;
     }

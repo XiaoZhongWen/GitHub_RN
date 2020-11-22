@@ -61,6 +61,27 @@ export function onLoadMorePopular(
     };
 }
 
+export function onFlushPopularData(
+    storeName,
+    pageIndex,
+    pageSize,
+    dataArray = [],
+) {
+    let max =
+        pageSize * pageIndex > dataArray.length
+            ? dataArray.length
+            : pageSize * pageIndex;
+
+    return (dispatch) => {
+        dispatch({
+            type: Types.FLUSH_POPULAR_DATA,
+            storeName: storeName,
+            pageIndex: pageIndex,
+            projectModes: dataArray.slice(0, max),
+        });
+    };
+}
+
 function handleData(dispatch, data, storeName, pageSize) {
     let fixItems = [];
     if (data && data.data && data.data.items) {

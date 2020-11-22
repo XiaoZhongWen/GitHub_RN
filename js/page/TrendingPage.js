@@ -15,10 +15,11 @@ import DeviceInfo from 'react-native-device-info';
 import {connect} from 'react-redux';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
+import EventBus from 'react-native-event-bus';
 import NavigationBar from '../common/NavigationBar';
 import TrendingItem from '../common/TrendingItem';
 import Setting from '../common/setting';
-import {EVENT_TYPE_TIME_SPAN_CHANGED} from '../common/Event';
+import EventTypes from '../common/Event';
 import actions from '../action';
 import TrendingDialog, {TimeSpans} from '../common/TrendingDialog';
 import TimeSpan from '../modal/TimeSpan';
@@ -64,7 +65,7 @@ export default class TrendingPage extends Component {
         this.setState({
             timeSpan: tab,
         });
-        DeviceEventEmitter.emit(EVENT_TYPE_TIME_SPAN_CHANGED, tab);
+        DeviceEventEmitter.emit(EventTypes.EVENT_TYPE_TIME_SPAN_CHANGED, tab);
     }
 
     renderTrendingDialog() {
@@ -147,16 +148,39 @@ class TopTrendingPage extends Component {
         const {tabLabel, timeSpan} = props;
         this.tabName = tabLabel;
         this.timeSpan = timeSpan;
+        this.favoriteDidChanged = false;
     }
 
     componentDidMount() {
         this.loadData();
         this.timeSpanChangeListener = DeviceEventEmitter.addListener(
-            EVENT_TYPE_TIME_SPAN_CHANGED,
+            EventTypes.EVENT_TYPE_TIME_SPAN_CHANGED,
             (timeSpan) => {
                 this.timeSpan = timeSpan;
                 this.loadData();
             },
+        );
+
+        EventBus.getInstance().addListener(
+            EventTypes.EVENT_TYPE_TRENDING_FAVORITE_CHANGE,
+            (this.favoriteChangeListener = (data) => {
+                this.favoriteDidChanged = true;
+            }),
+        );
+        EventBus.getInstance().addListener(
+            EventTypes.EVENT_TYPE_TAB_SELECT_CHANGE,
+            (this.tabSelectChangeListener = (data) => {
+                if (data.to === 'PopularPage' && this.favoriteDidChanged) {
+                    this.favoriteDidChanged = false;
+                    const store = this._store();
+                    onFlushTrendingData(
+                        this.storeName,
+                        store.pageIndex,
+                        Setting.PAGESIZE,
+                        store.items,
+                    );
+                }
+            }),
         );
     }
 
@@ -164,6 +188,8 @@ class TopTrendingPage extends Component {
         if (this.timeSpanChangeListener) {
             this.timeSpanChangeListener.remove();
         }
+        EventBus.getInstance().removeListener(this.favoriteChangeListener);
+        EventBus.getInstance().removeListener(this.tabSelectChangeListener);
     }
 
     urlWithStoreName(storeName) {
@@ -320,6 +346,10 @@ const mapDispatchToProps = (dispatch) => ({
                 dataArray,
                 callback,
             ),
+        ),
+    onFlushTrendingData: (storeName, pageIndex, pageSize, items) =>
+        dispatch(
+            actions.onFlushTrendingData(storeName, pageIndex, pageSize, items),
         ),
 });
 

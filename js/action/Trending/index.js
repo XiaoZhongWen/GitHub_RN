@@ -60,6 +60,24 @@ export function onLoadMoreTrending(
     };
 }
 
+export function onFlushTrendingData(
+    storeName,
+    pageIndex,
+    pageSize,
+    dataArray = [],
+) {
+    let max =
+        pageSize * pageIndex > dataArray.length
+            ? dataArray.length
+            : pageSize * pageIndex;
+    return {
+        type: Types.FLUSH_TRENDING_DATA,
+        storeName: storeName,
+        pageIndex: pageIndex,
+        projectModes: dataArray.slice(0, max),
+    };
+}
+
 function handleData(dispatch, data, storeName, pageSize) {
     let fixItems = [];
     if (data && data.data) {

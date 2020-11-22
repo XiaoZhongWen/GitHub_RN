@@ -7,7 +7,10 @@ export default function onAction(state = defaultAction, action) {
         case Types.FAVORITE_REFRESH:
             return {
                 ...state,
-                isLoading: true,
+                [action.favoriteName]: {
+                    ...state[action.favoriteName],
+                    isLoading: true,
+                },
             };
         case Types.FAVORITE_REFRESH_SUCCESS:
             return {
@@ -21,7 +24,10 @@ export default function onAction(state = defaultAction, action) {
         case Types.FAVORITE_REFRESH_FAIL:
             return {
                 ...state,
-                isLoading: false,
+                [action.favoriteName]: {
+                    ...state[action.favoriteName],
+                    isLoading: false,
+                },
             };
         default:
             return state;
