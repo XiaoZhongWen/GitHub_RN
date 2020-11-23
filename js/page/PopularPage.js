@@ -21,35 +21,37 @@ import Setting from '../common/setting';
 import NavigationUtil from '../Navigator/NavigationUtil';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
 import FavoriteService from '../service/FavoriteService';
+import {FLAG_LANGUAGE} from '../expand/dao/LanguagesDao';
 import {onFlushPopularData} from '../action/popular';
+import {onLoadLanguageData} from '../action/Languages';
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 
-export default class PopularPage extends Component {
+class PopularPage extends Component {
     constructor(props) {
         super(props);
-        this.tabNames = [
-            'Java',
-            'iOS',
-            'Android',
-            'PHP',
-            'React Native',
-            'React',
-        ];
+
+        const {onLoadLanguageData} = this.props;
+        onLoadLanguageData(FLAG_LANGUAGE.flag_key);
     }
 
     generateTabs() {
         const tabs = {};
-        this.tabNames.forEach((item, index) => {
-            tabs[`tab${index}`] = {
-                screen: (props) => (
-                    <TopPopularPage {...props} tabLabel={item} />
-                ),
-                navigationOptions: {
-                    title: item,
-                },
-            };
-        });
+        const {keys} = this.props;
+        if (keys) {
+            keys.forEach((key, index) => {
+                if (key.checked) {
+                    tabs[`tab${index}`] = {
+                        screen: (props) => (
+                            <TopPopularPage {...props} tabLabel={key.name} />
+                        ),
+                        navigationOptions: {
+                            title: key.name,
+                        },
+                    };
+                }
+            });
+        }
         return tabs;
     }
 
@@ -68,29 +70,46 @@ export default class PopularPage extends Component {
             />
         );
 
-        const TabNavigator = createAppContainer(
-            createMaterialTopTabNavigator(this.generateTabs(), {
-                tabBarOptions: {
-                    tabStyle: styles.tabStyle,
-                    scrollEnabled: true,
-                    upperCaseLabel: false,
-                    style: {
-                        backgroundColor: Setting.THEME_COLOR,
-                    },
-                    indicatorStyle: styles.indicatorStyle,
-                    labelStyle: styles.labelStyle,
-                },
-            }),
-        );
+        const {keys} = this.props;
+
+        const TabNavigator = keys.length
+            ? createAppContainer(
+                  createMaterialTopTabNavigator(this.generateTabs(), {
+                      tabBarOptions: {
+                          tabStyle: styles.tabStyle,
+                          scrollEnabled: true,
+                          upperCaseLabel: false,
+                          style: {
+                              backgroundColor: Setting.THEME_COLOR,
+                          },
+                          indicatorStyle: styles.indicatorStyle,
+                          labelStyle: styles.labelStyle,
+                      },
+                  }),
+              )
+            : null;
 
         return (
             <View style={styles.container}>
                 {navigationBar}
-                <TabNavigator />
+                {TabNavigator && <TabNavigator />}
             </View>
         );
     }
 }
+
+const mapPopularStateToProps = (state) => ({
+    keys: state.language.keys,
+});
+
+const mapPopularDispatchToProps = (dispatch) => ({
+    onLoadLanguageData: (flag) => dispatch(actions.onLoadLanguageData(flag)),
+});
+
+export default connect(
+    mapPopularStateToProps,
+    mapPopularDispatchToProps,
+)(PopularPage);
 
 class TopPopular extends Component {
     constructor(props) {

@@ -28,14 +28,17 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
 import NavigationUtil from '../Navigator/NavigationUtil';
 import FavoriteService from '../service/FavoriteService';
+import {FLAG_LANGUAGE} from '../expand/dao/LanguagesDao';
+import {onLoadLanguageData} from '../action/Languages';
 
 const URL = 'https://github.com/trending/';
 const QUERY_STR = '?since=daily';
 
-export default class TrendingPage extends Component {
+class TrendingPage extends Component {
     constructor(props) {
         super(props);
-        this.tabNames = ['All', 'Java', 'C', 'JavaScript', 'PHP'];
+        const {onLoadLanguageData} = this.props;
+        onLoadLanguageData(FLAG_LANGUAGE.flag_language);
         this.state = {
             timeSpan: TimeSpans[0],
         };
@@ -43,20 +46,25 @@ export default class TrendingPage extends Component {
 
     generateTabs() {
         let tabs = {};
-        this.tabNames.forEach((item, index) => {
-            tabs[`tab${index}`] = {
-                screen: (props) => (
-                    <TopTrending
-                        {...props}
-                        tabLabel={item}
-                        timeSpan={this.state.timeSpan}
-                    />
-                ),
-                navigationOptions: {
-                    title: item,
-                },
-            };
-        });
+        const {languages} = this.props;
+        if (languages) {
+            languages.forEach((language, index) => {
+                if (language.checked) {
+                    tabs[`tab${index}`] = {
+                        screen: (props) => (
+                            <TopTrending
+                                {...props}
+                                tabLabel={language.name}
+                                timeSpan={this.state.timeSpan}
+                            />
+                        ),
+                        navigationOptions: {
+                            title: language.name,
+                        },
+                    };
+                }
+            });
+        }
         return tabs;
     }
 
@@ -98,21 +106,24 @@ export default class TrendingPage extends Component {
     }
 
     generateTabNavigator() {
+        const {languages} = this.props;
         if (!this.tabNav) {
-            this.tabNav = createAppContainer(
-                createMaterialTopTabNavigator(this.generateTabs(), {
-                    tabBarOptions: {
-                        tabStyle: styles.tabStyle,
-                        scrollEnabled: true,
-                        upperCaseLabel: false,
-                        labelStyle: styles.labelStyle,
-                        indicatorStyle: styles.indicatorStyle,
-                        style: {
-                            backgroundColor: Setting.THEME_COLOR,
-                        },
-                    },
-                }),
-            );
+            this.tabNav = languages.length
+                ? createAppContainer(
+                      createMaterialTopTabNavigator(this.generateTabs(), {
+                          tabBarOptions: {
+                              tabStyle: styles.tabStyle,
+                              scrollEnabled: true,
+                              upperCaseLabel: false,
+                              labelStyle: styles.labelStyle,
+                              indicatorStyle: styles.indicatorStyle,
+                              style: {
+                                  backgroundColor: Setting.THEME_COLOR,
+                              },
+                          },
+                      }),
+                  )
+                : null;
         }
         return this.tabNav;
     }
@@ -135,12 +146,25 @@ export default class TrendingPage extends Component {
         return (
             <View style={styles.container}>
                 {navigationBar}
-                <TabNavigator />
+                {TabNavigator && <TabNavigator />}
                 {this.renderTrendingDialog()}
             </View>
         );
     }
 }
+
+const mapTrendingStateToProps = (state) => ({
+    languages: state.language.languages,
+});
+
+const mapTrendingDispatchToProps = (dispatch) => ({
+    onLoadLanguageData: (flag) => dispatch(actions.onLoadLanguageData(flag)),
+});
+
+export default connect(
+    mapTrendingStateToProps,
+    mapTrendingDispatchToProps,
+)(TrendingPage);
 
 class TopTrendingPage extends Component {
     constructor(props) {

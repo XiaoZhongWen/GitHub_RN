@@ -13,13 +13,30 @@ import Setting from '../common/setting';
 import {MENU} from '../common/MENU';
 import GlobalStyle from '../common/GlobalStyle';
 import ViewUtil from '../common/ViewUtil';
+import NavigationUtil from '../Navigator/NavigationUtil';
 
 class MyPage extends Component {
-    onClick(menu) {}
+    onClick(m) {
+        let param = {};
+        let routeName;
+        switch (m) {
+            case MENU.Tutorial:
+                routeName = 'WebPage';
+                param.title = '教程';
+                param.url =
+                    'https://coding.m.imooc.com/classindex.html?cid=304';
+                break;
+            case MENU.About:
+                routeName = 'AboutPage';
+            default:
+                break;
+        }
+        NavigationUtil.goPage(param, routeName);
+    }
 
     getItem(menu) {
         return ViewUtil.getMenuItem(menu, Setting.THEME_COLOR, () =>
-            this.onClick(item),
+            this.onClick(menu),
         );
     }
 
@@ -37,7 +54,7 @@ class MyPage extends Component {
                 <ScrollView>
                     <TouchableOpacity
                         style={styles.item}
-                        onPress={() => this.onClick(MENU.about)}>
+                        onPress={() => this.onClick(MENU.About)}>
                         <View style={styles.about}>
                             <Ionicons
                                 name={MENU.About.icon}
