@@ -38,6 +38,9 @@ class MyPage extends Component {
             case MENU.Sort_Language:
                 routeName = 'CustomLanguageSort';
                 break;
+            case MENU.Sort_Key:
+                routeName = 'CustomTagSort';
+                break;
             default:
                 break;
         }

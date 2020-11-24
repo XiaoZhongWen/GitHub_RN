@@ -11,40 +11,37 @@ import LanguagesDao, {FLAG_LANGUAGE} from '../expand/dao/LanguagesDao';
 
 const window = Dimensions.get('window');
 
-class CustomLanguageSort extends Component {
+class CustomTagSort extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checkedLanguages: CustomLanguageSort.getCheckedLanguages(props),
+            checkedKeys: CustomTagSort.getCheckedKeys(props),
         };
         this.order = [];
-        this.languagesDao = new LanguagesDao(FLAG_LANGUAGE.flag_language);
+        this.languagesDao = new LanguagesDao(FLAG_LANGUAGE.flag_key);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const checkedLanguages = CustomLanguageSort.getCheckedLanguages(
-            nextProps,
-            prevState,
-        );
-        if (nextProps.languages !== checkedLanguages) {
+        const checkedKeys = CustomTagSort.getCheckedKeys(nextProps, prevState);
+        if (nextProps.keys !== checkedKeys) {
             return {
-                checkedLanguages: checkedLanguages,
+                checkedKeys: checkedKeys,
             };
         }
         return null;
     }
 
     componentDidMount() {
-        if (CustomLanguageSort.getCheckedLanguages(this.props).length === 0) {
+        if (CustomTagSort.getCheckedKeys(this.props).length === 0) {
             const {onLoadLanguageData} = this.props;
-            onLoadLanguageData(FLAG_LANGUAGE.flag_language);
+            onLoadLanguageData(FLAG_LANGUAGE.flag_key);
         }
     }
 
     render() {
         const navigationBar = (
             <NavigationBar
-                title={'语言排序'}
+                title={'标签排序'}
                 rightButton={this.renderRightButton()}
                 style={{backgroundColor: Setting.THEME_COLOR}}
             />
@@ -55,7 +52,7 @@ class CustomLanguageSort extends Component {
                 {navigationBar}
                 <SortableList
                     style={styles.list}
-                    data={this.state.checkedLanguages}
+                    data={this.state.checkedKeys}
                     renderRow={this._renderRow}
                     onChangeOrder={(nextOrder) => {
                         this.order = nextOrder;
@@ -89,8 +86,8 @@ class CustomLanguageSort extends Component {
         }
         let originOrder = [];
         let backup = [];
-        for (let index = 0; index < this.props.languages.length; index++) {
-            const element = this.props.languages[index];
+        for (let index = 0; index < this.props.keys.length; index++) {
+            const element = this.props.keys[index];
             if (element.checked) {
                 originOrder.push(index);
             }
@@ -106,30 +103,30 @@ class CustomLanguageSort extends Component {
 
         for (let index = 0; index < newOrder.length; index++) {
             const order = newOrder[index];
-            const item = this.props.languages[order];
+            const item = this.props.keys[order];
             backup[originOrder[index]] = item;
         }
 
         this.languagesDao.save(backup);
         const {onLoadLanguageData} = this.props;
-        onLoadLanguageData(FLAG_LANGUAGE.flag_language);
+        onLoadLanguageData(FLAG_LANGUAGE.flag_key);
         this.props.navigation.goBack();
     }
 
-    static getCheckedLanguages(props, state) {
-        if (state && state.checkedLanguages && state.checkedLanguages.length) {
-            return state.checkedLanguages;
+    static getCheckedKeys(props, state) {
+        if (state && state.checkedKeys && state.checkedKeys.length) {
+            return state.checkedKeys;
         }
 
-        const {languages} = props;
-        let checkedLanguages = [];
-        for (let index = 0; index < languages.length; index++) {
-            const language = languages[index];
-            if (language.checked) {
-                checkedLanguages.push(language);
+        const {keys} = props;
+        let checkedKeys = [];
+        for (let index = 0; index < keys.length; index++) {
+            const key = keys[index];
+            if (key.checked) {
+                checkedKeys.push(key);
             }
         }
-        return checkedLanguages;
+        return checkedKeys;
     }
 }
 
@@ -144,11 +141,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    languages: state.language.languages,
+    keys: state.language.keys,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onLoadLanguageData: (flag) => dispatch(actions.onLoadLanguageData(flag)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomLanguageSort);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomTagSort);

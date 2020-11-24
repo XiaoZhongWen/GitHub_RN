@@ -122,7 +122,10 @@ class TrendingPage extends Component {
         for (let index = 0; index < items.length; index++) {
             const element1 = items[index];
             const element2 = prevItems[index];
-            if (element1.checked !== element2.checked) {
+            if (
+                element1.checked !== element2.checked ||
+                element1.name !== element2.name
+            ) {
                 return true;
             }
         }
