@@ -30,6 +30,7 @@ import NavigationUtil from '../Navigator/NavigationUtil';
 import FavoriteService from '../service/FavoriteService';
 import {FLAG_LANGUAGE} from '../expand/dao/LanguagesDao';
 import {onLoadLanguageData} from '../action/Languages';
+import {element} from 'prop-types';
 
 const URL = 'https://github.com/trending/';
 const QUERY_STR = '?since=daily';
@@ -39,6 +40,7 @@ class TrendingPage extends Component {
         super(props);
         const {onLoadLanguageData} = this.props;
         onLoadLanguageData(FLAG_LANGUAGE.flag_language);
+        this.prevLanguages = [];
         this.state = {
             timeSpan: TimeSpans[0],
         };
@@ -47,6 +49,7 @@ class TrendingPage extends Component {
     generateTabs() {
         let tabs = {};
         const {languages} = this.props;
+        this.prevLanguages = languages;
         if (languages) {
             languages.forEach((language, index) => {
                 if (language.checked) {
@@ -105,9 +108,34 @@ class TrendingPage extends Component {
         );
     }
 
+    checkIsUpdated(prevItems, items) {
+        if (
+            !prevItems ||
+            !items ||
+            !prevItems.length ||
+            !items.length ||
+            prevItems.length !== items.length
+        ) {
+            return true;
+        }
+
+        for (let index = 0; index < items.length; index++) {
+            const element1 = items[index];
+            const element2 = prevItems[index];
+            if (element1.checked !== element2.checked) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     generateTabNavigator() {
-        const {languages} = this.props;
-        if (!this.tabNav) {
+        const isUpdated = this.checkIsUpdated(
+            this.prevLanguages,
+            this.props.languages,
+        );
+        if (!this.tabNav || isUpdated) {
+            const {languages} = this.props;
             this.tabNav = languages.length
                 ? createAppContainer(
                       createMaterialTopTabNavigator(this.generateTabs(), {
@@ -121,6 +149,7 @@ class TrendingPage extends Component {
                                   backgroundColor: Setting.THEME_COLOR,
                               },
                           },
+                          lazy: true,
                       }),
                   )
                 : null;

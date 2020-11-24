@@ -8,27 +8,27 @@ import Setting from '../common/setting';
 import LanguagesDao, {FLAG_LANGUAGE} from '../expand/dao/LanguagesDao';
 import actions from '../action';
 
-class CustomLanguage extends Component {
+class CustomTag extends Component {
     constructor(props) {
         super(props);
         const {onLoadLanguageData} = props;
-        onLoadLanguageData(FLAG_LANGUAGE.flag_language);
+        onLoadLanguageData(FLAG_LANGUAGE.flag_key);
     }
 
-    onChecked(languages) {
-        const languagesDao = new LanguagesDao(FLAG_LANGUAGE.flag_language);
-        languagesDao.save(languages);
+    onChecked(keys) {
+        const languagesDao = new LanguagesDao(FLAG_LANGUAGE.flag_key);
+        languagesDao.save(keys);
         const {onLoadLanguageData} = this.props;
-        onLoadLanguageData(FLAG_LANGUAGE.flag_language);
+        onLoadLanguageData(FLAG_LANGUAGE.flag_key);
     }
 
     renderCheckBoxView() {
-        const {languages} = this.props;
-        if (languages && languages.length) {
+        const {keys} = this.props;
+        if (keys && keys.length) {
             return (
                 <CheckBoxView
-                    items={languages}
-                    onChecked={(language) => this.onChecked(language)}
+                    items={keys}
+                    onChecked={(keys) => this.onChecked(keys)}
                 />
             );
         } else {
@@ -39,7 +39,7 @@ class CustomLanguage extends Component {
     render() {
         const navigationBar = (
             <NavigationBar
-                title={'自定义语言'}
+                title={'自定义标签'}
                 style={{backgroundColor: Setting.THEME_COLOR}}
             />
         );
@@ -53,14 +53,14 @@ class CustomLanguage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    languages: state.language.languages,
+    keys: state.language.keys,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onLoadLanguageData: (flag) => dispatch(actions.onLoadLanguageData(flag)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomLanguage);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomTag);
 
 const styles = StyleSheet.create({
     container: {

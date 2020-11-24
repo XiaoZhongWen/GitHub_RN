@@ -32,6 +32,12 @@ class MyPage extends Component {
             case MENU.Custom_Language:
                 routeName = 'CustomLanguage';
                 break;
+            case MENU.Custom_Key:
+                routeName = 'CustomTag';
+                break;
+            case MENU.Sort_Language:
+                routeName = 'CustomLanguageSort';
+                break;
             default:
                 break;
         }

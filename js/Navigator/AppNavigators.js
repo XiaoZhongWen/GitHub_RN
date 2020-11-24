@@ -6,6 +6,8 @@ import DetailPage from '../page/DetailPage';
 import WebPage from '../page/WebPage';
 import AboutPage from '../page/about/AboutPage';
 import CustomLanguage from '../page/CustomLanguage';
+import CustomTag from '../page/CustomTag';
+import CustomLanguageSort from '../page/CustomLanguageSort';
 
 const InitNavigator = createStackNavigator({
     Welcome: {
@@ -43,6 +45,18 @@ const MainNavigator = createStackNavigator({
     },
     CustomLanguage: {
         screen: CustomLanguage,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    CustomTag: {
+        screen: CustomTag,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    CustomLanguageSort: {
+        screen: CustomLanguageSort,
         navigationOptions: {
             header: null,
         },

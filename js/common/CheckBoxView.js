@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import {View, ScrollView, StyleSheet} from 'react-native';
 import CheckBox from 'react-native-check-box';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Setting from '../common/setting';
 
 export default class CheckBoxView extends Component {
     constructor(props) {
         super(props);
-        const {items} = this.props.items;
-        this.state = {
-            items: items,
-        };
+        // const {items} = this.props;
+        // this.state = {
+        //     items: items,
+        // };
     }
 
     _checkedImage(checked) {
-        const {theme} = this.params;
         return (
             <Ionicons
                 name={checked ? 'ios-checkbox' : 'md-square-outline'}
@@ -25,6 +25,21 @@ export default class CheckBoxView extends Component {
         );
     }
 
+    onChecked(item) {
+        let items = this.props.items;
+        for (let index = 0; index < items.length; index++) {
+            const element = items[index];
+            if (element === item) {
+                item.checked = !item.checked;
+                // this.setState({
+                //     items: items,
+                // });
+                this.props.onChecked(items);
+                break;
+            }
+        }
+    }
+
     renderItems(items, onChecked) {
         let views = [];
         for (let index = 0; index < items.length; index += 2) {
@@ -32,10 +47,10 @@ export default class CheckBoxView extends Component {
             const rightItem =
                 index + 1 < items.length ? items[index + 1] : null;
             const view = (
-                <View style={styles.checkBoxContainer}>
+                <View key={index} style={styles.checkBoxContainer}>
                     <CheckBox
-                        style={{color: Setting.THEME_COLOR}}
-                        onClick={() => onChecked(leftItem)}
+                        style={styles.checkBox}
+                        onClick={() => this.onChecked(leftItem)}
                         isChecked={leftItem.checked}
                         checkedImage={this._checkedImage(true)}
                         unCheckedImage={this._checkedImage(false)}
@@ -43,8 +58,8 @@ export default class CheckBoxView extends Component {
                     />
                     {rightItem ? (
                         <CheckBox
-                            style={{color: Setting.THEME_COLOR}}
-                            onClick={() => onChecked(rightItem)}
+                            style={styles.checkBox}
+                            onClick={() => this.onChecked(rightItem)}
                             isChecked={rightItem.checked}
                             checkedImage={this._checkedImage(true)}
                             unCheckedImage={this._checkedImage(false)}
@@ -59,8 +74,7 @@ export default class CheckBoxView extends Component {
     }
 
     render() {
-        const items = this.state.items;
-        const {onChecked} = this.props;
+        const {onChecked, items} = this.props;
         return (
             <ScrollView style={styles.container}>
                 {this.renderItems(items, onChecked)}
@@ -78,5 +92,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderBottomWidth: 0.5,
         borderBottomColor: 'gray',
+    },
+    checkBox: {
+        flex: 1,
+        padding: 10,
     },
 });
