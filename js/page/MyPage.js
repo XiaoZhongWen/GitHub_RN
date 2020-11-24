@@ -28,6 +28,10 @@ class MyPage extends Component {
                 break;
             case MENU.About:
                 routeName = 'AboutPage';
+                break;
+            case MENU.Custom_Language:
+                routeName = 'CustomLanguage';
+                break;
             default:
                 break;
         }

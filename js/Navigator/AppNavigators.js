@@ -5,6 +5,7 @@ import HomePage from '../page/HomePage';
 import DetailPage from '../page/DetailPage';
 import WebPage from '../page/WebPage';
 import AboutPage from '../page/about/AboutPage';
+import CustomLanguage from '../page/CustomLanguage';
 
 const InitNavigator = createStackNavigator({
     Welcome: {
@@ -36,6 +37,12 @@ const MainNavigator = createStackNavigator({
     },
     AboutPage: {
         screen: AboutPage,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    CustomLanguage: {
+        screen: CustomLanguage,
         navigationOptions: {
             header: null,
         },
