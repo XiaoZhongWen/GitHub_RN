@@ -90,12 +90,13 @@ export default class DetailPage extends Component {
     }
 
     render() {
+        const {theme} = this.params;
         const navigationBar = (
             <NavigationBar
                 title={this.state.title}
                 leftButton={ViewUtil.leftButton(() => this.onBack())}
                 rightButton={this.renderRightButton()}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={theme.styles.navBar}
             />
         );
 

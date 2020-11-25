@@ -43,7 +43,11 @@ class PopularPage extends Component {
                 if (key.checked) {
                     tabs[`tab${index}`] = {
                         screen: (props) => (
-                            <TopPopularPage {...props} tabLabel={key.name} />
+                            <TopPopularPage
+                                {...props}
+                                tabLabel={key.name}
+                                theme={this.props.theme}
+                            />
                         ),
                         navigationOptions: {
                             title: key.name,
@@ -56,17 +60,16 @@ class PopularPage extends Component {
     }
 
     render() {
+        const {theme} = this.props;
         let statusBar = {
-            backgroundColor: Setting.THEME_COLOR,
+            backgroundColor: theme.themeColor,
             barStyle: 'light-content',
         };
         let navigationBar = (
             <NavigationBar
                 title={'最热'}
                 statusBar={statusBar}
-                style={{
-                    backgroundColor: Setting.THEME_COLOR,
-                }}
+                style={theme.styles.navBar}
             />
         );
 
@@ -80,7 +83,7 @@ class PopularPage extends Component {
                           scrollEnabled: true,
                           upperCaseLabel: false,
                           style: {
-                              backgroundColor: Setting.THEME_COLOR,
+                              backgroundColor: theme.themeColor,
                           },
                           indicatorStyle: styles.indicatorStyle,
                           labelStyle: styles.labelStyle,
@@ -100,6 +103,7 @@ class PopularPage extends Component {
 
 const mapPopularStateToProps = (state) => ({
     keys: state.language.keys,
+    theme: state.theme.theme,
 });
 
 const mapPopularDispatchToProps = (dispatch) => ({
@@ -215,9 +219,11 @@ class TopPopular extends Component {
         return (
             <PopularItem
                 item={data}
+                theme={this.props.theme}
                 onFavorite={this.onFavorite}
                 onSelect={(callback) => {
                     this.onSelect({
+                        theme: this.props.theme,
                         type: FLAG_PAGE.FLAG_PAGE_POPULAR,
                         data: data,
                         callback,
@@ -237,7 +243,7 @@ class TopPopular extends Component {
     }
 
     render() {
-        const {popular} = this.props;
+        const {popular, theme} = this.props;
         let store = this._store();
 
         return (
@@ -249,8 +255,8 @@ class TopPopular extends Component {
                     refreshControl={
                         <RefreshControl
                             title={'loading'}
-                            titleColor={Setting.THEME_COLOR}
-                            colors={[Setting.THEME_COLOR]}
+                            titleColor={theme.themeColor}
+                            colors={[theme.themeColor]}
                             refreshing={store.isLoading}
                             onRefresh={() => this.loadData()}
                         />

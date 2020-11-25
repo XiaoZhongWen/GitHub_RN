@@ -14,6 +14,7 @@ import {MENU} from '../common/MENU';
 import GlobalStyle from '../common/GlobalStyle';
 import ViewUtil from '../common/ViewUtil';
 import NavigationUtil from '../Navigator/NavigationUtil';
+import actions from '../action';
 
 class MyPage extends Component {
     onClick(m) {
@@ -41,6 +42,9 @@ class MyPage extends Component {
             case MENU.Sort_Key:
                 routeName = 'CustomTagSort';
                 break;
+            case MENU.Custom_Theme:
+                this.props.onShowCustomThemeView(true);
+                return;
             default:
                 break;
         }
@@ -48,17 +52,16 @@ class MyPage extends Component {
     }
 
     getItem(menu) {
-        return ViewUtil.getMenuItem(menu, Setting.THEME_COLOR, () =>
+        return ViewUtil.getMenuItem(menu, this.props.theme.themeColor, () =>
             this.onClick(menu),
         );
     }
 
     render() {
+        const {theme} = this.props;
+
         const navigationBar = (
-            <NavigationBar
-                title={'我'}
-                style={{backgroundColor: Setting.THEME_COLOR}}
-            />
+            <NavigationBar title={'我'} style={theme.styles.navBar} />
         );
 
         return (
@@ -74,7 +77,7 @@ class MyPage extends Component {
                                 size={40}
                                 style={{
                                     marginRight: 10,
-                                    color: Setting.THEME_COLOR,
+                                    color: theme.themeColor,
                                 }}
                             />
                             <Text>GitHub Popular</Text>
@@ -84,7 +87,7 @@ class MyPage extends Component {
                             size={16}
                             style={{
                                 marginRight: 10,
-                                color: Setting.THEME_COLOR,
+                                color: theme.themeColor,
                             }}
                         />
                     </TouchableOpacity>
@@ -151,6 +154,13 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapStateToDispatch = (state) => ({
+    theme: state.theme.theme,
+});
 
-export default connect(mapDispatchToProps)(MyPage);
+const mapDispatchToProps = (dispatch) => ({
+    onShowCustomThemeView: (show) =>
+        dispatch(actions.onShowCustomThemeView(show)),
+});
+
+export default connect(mapStateToDispatch, mapDispatchToProps)(MyPage);

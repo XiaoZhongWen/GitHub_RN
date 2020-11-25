@@ -3,6 +3,7 @@ import {StyleSheet, View, FlatList, RefreshControl} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import EventBus from 'react-native-event-bus';
+import {connect} from 'react-redux';
 import NavigationBar from '../common/NavigationBar';
 import NavigationUtil from '../Navigator/NavigationUtil';
 import {FLAG_PAGE} from '../expand/dao/DataStore';
@@ -13,9 +14,7 @@ import actions from '../action';
 import FavoriteService from '../service/FavoriteService';
 import EventTypes from '../common/Event';
 
-import {connect} from 'react-redux';
-
-export default class FavoritePage extends Component {
+class FavoritePage extends Component {
     constructor(props) {
         super(props);
         this.tabItems = [
@@ -31,11 +30,16 @@ export default class FavoritePage extends Component {
     }
 
     generateTabs() {
+        const {theme} = this.props;
         let tabs = {};
         this.tabItems.forEach((tabItem) => {
             tabs[tabItem.type] = {
                 screen: (props) => (
-                    <TopFavoritePage {...props} type={tabItem.type} />
+                    <TopFavoritePage
+                        {...props}
+                        type={tabItem.type}
+                        theme={theme}
+                    />
                 ),
                 navigationOptions: {
                     title: tabItem.name,
@@ -46,6 +50,8 @@ export default class FavoritePage extends Component {
     }
 
     render() {
+        const {theme} = this.props;
+
         const statusBar = {
             barStyle: 'light-content',
             hidden: false,
@@ -54,7 +60,7 @@ export default class FavoritePage extends Component {
         const TabNavigator = createAppContainer(
             createMaterialTopTabNavigator(this.generateTabs(), {
                 tabBarOptions: {
-                    style: {backgroundColor: Setting.THEME_COLOR},
+                    style: {backgroundColor: theme.themeColor},
                     labelStyle: styles.labelStyle,
                     indicatorStyle: {
                         backgroundColor: 'white',
@@ -67,7 +73,7 @@ export default class FavoritePage extends Component {
             <NavigationBar
                 title="收藏"
                 statusBar={statusBar}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={theme.styles.navBar}
             />
         );
 
@@ -79,6 +85,12 @@ export default class FavoritePage extends Component {
         );
     }
 }
+
+const mapFavoriteStateToProps = (state) => ({
+    theme: state.theme.theme,
+});
+
+export default connect(mapFavoriteStateToProps)(FavoritePage);
 
 class TopFavorite extends Component {
     componentDidMount() {
@@ -137,7 +149,7 @@ class TopFavorite extends Component {
 
     render() {
         let store = this._store();
-        const {type} = this.props;
+        const {type, theme} = this.props;
         return (
             <View style={styles.container}>
                 <FlatList
@@ -145,12 +157,14 @@ class TopFavorite extends Component {
                     renderItem={(item) => {
                         return type === FLAG_PAGE.FLAG_PAGE_POPULAR ? (
                             <PopularItem
+                                theme={theme}
                                 item={item.item}
                                 onFavorite={(item, isFavorite) =>
                                     this.onFavorite(item, isFavorite, type)
                                 }
                                 onSelect={(callback) =>
                                     this.onSelect({
+                                        theme: theme,
                                         type: type,
                                         data: item.item,
                                         callback,
@@ -159,12 +173,14 @@ class TopFavorite extends Component {
                             />
                         ) : (
                             <TrendingItem
+                                theme={theme}
                                 item={item.item}
                                 onFavorite={(item, isFavorite) =>
                                     this.onFavorite(item, isFavorite, type)
                                 }
                                 onSelect={(callback) =>
                                     this.onSelect({
+                                        theme: theme,
                                         type: type,
                                         data: item.item,
                                         callback,
@@ -176,8 +192,8 @@ class TopFavorite extends Component {
                     refreshControl={
                         <RefreshControl
                             title={'loading'}
-                            titleColor={Setting.THEME_COLOR}
-                            colors={[Setting.THEME_COLOR]}
+                            titleColor={theme.themeColor}
+                            colors={[theme.themeColor]}
                             refreshing={store.isLoading}
                             onRefresh={() => this.loadData()}
                         />

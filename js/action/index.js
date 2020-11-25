@@ -1,4 +1,4 @@
-import {onThemeChange} from './theme';
+import {onThemeChange, onShowCustomThemeView, onThemeInit} from './theme';
 import {
     onLoadPopularData,
     onLoadMorePopular,
@@ -14,6 +14,8 @@ import {onLoadLanguageData} from './Languages';
 
 export default {
     onThemeChange,
+    onShowCustomThemeView,
+    onThemeInit,
     onLoadPopularData,
     onLoadMorePopular,
     onLoadTrendingData,

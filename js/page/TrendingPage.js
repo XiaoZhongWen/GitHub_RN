@@ -48,8 +48,9 @@ class TrendingPage extends Component {
 
     generateTabs() {
         let tabs = {};
-        const {languages} = this.props;
+        const {languages, theme} = this.props;
         this.prevLanguages = languages;
+        this.prevTheme = theme;
         if (languages) {
             languages.forEach((language, index) => {
                 if (language.checked) {
@@ -59,6 +60,7 @@ class TrendingPage extends Component {
                                 {...props}
                                 tabLabel={language.name}
                                 timeSpan={this.state.timeSpan}
+                                theme={theme}
                             />
                         ),
                         navigationOptions: {
@@ -137,7 +139,12 @@ class TrendingPage extends Component {
             this.prevLanguages,
             this.props.languages,
         );
-        if (!this.tabNav || isUpdated) {
+        const {theme} = this.props;
+        if (
+            !this.tabNav ||
+            isUpdated ||
+            theme.themeColor !== this.prevTheme.themeColor
+        ) {
             const {languages} = this.props;
             this.tabNav = languages.length
                 ? createAppContainer(
@@ -149,7 +156,7 @@ class TrendingPage extends Component {
                               labelStyle: styles.labelStyle,
                               indicatorStyle: styles.indicatorStyle,
                               style: {
-                                  backgroundColor: Setting.THEME_COLOR,
+                                  backgroundColor: theme.themeColor,
                               },
                           },
                           lazy: true,
@@ -161,6 +168,7 @@ class TrendingPage extends Component {
     }
 
     render() {
+        const {theme} = this.props;
         const statusBar = {
             barStyle: 'light-content',
             hidden: false,
@@ -169,7 +177,7 @@ class TrendingPage extends Component {
             <NavigationBar
                 titleView={this.renderTitleView()}
                 statusBar={statusBar}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={theme.styles.navBar}
             />
         );
 
@@ -187,6 +195,7 @@ class TrendingPage extends Component {
 
 const mapTrendingStateToProps = (state) => ({
     languages: state.language.languages,
+    theme: state.theme.theme,
 });
 
 const mapTrendingDispatchToProps = (dispatch) => ({
@@ -301,10 +310,12 @@ class TopTrendingPage extends Component {
     renderItem_(data) {
         return (
             <TrendingItem
+                theme={this.props.theme}
                 item={data}
                 onFavorite={this.onFavorite}
                 onSelect={(callback) => {
                     this.onSelect({
+                        theme: this.props.theme,
                         type: FLAG_PAGE.FLAG_PAGE_TRENDING,
                         data: data,
                         callback,
@@ -325,6 +336,7 @@ class TopTrendingPage extends Component {
 
     render() {
         const store = this._store();
+        const {theme} = this.props;
         return (
             <View>
                 <FlatList
@@ -333,8 +345,8 @@ class TopTrendingPage extends Component {
                     refreshControl={
                         <RefreshControl
                             title={'loading'}
-                            titleColor={Setting.THEME_COLOR}
-                            colors={[Setting.THEME_COLOR]}
+                            titleColor={theme.themeColor}
+                            colors={[theme.themeColor]}
                             refreshing={store.isLoading}
                             onRefresh={() => this.loadData()}
                         />

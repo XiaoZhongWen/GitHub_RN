@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import NavigationUtil from '../Navigator/NavigationUtil';
+import actions from '../action';
+import {connect} from 'react-redux';
 
-import NavigationUtil from '../Navigator/NavigationUtil'
-
-export default class WelcomePage extends Component {
-
+class WelcomePage extends Component {
     componentDidMount() {
+        this.props.onThemeInit();
         this.timer = setTimeout(() => {
             NavigationUtil.resetToHomePage(this.props);
         }, 2000);
@@ -24,10 +25,16 @@ export default class WelcomePage extends Component {
     }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+    onThemeInit: () => dispatch(actions.onThemeInit()),
+});
+
+export default connect(null, mapDispatchToProps)(WelcomePage);
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+    },
 });

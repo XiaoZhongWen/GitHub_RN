@@ -53,7 +53,11 @@ export default class FavoriteDao {
             AsyncStorage.getItem(this.favoriteKey, (error, result) => {
                 if (!error) {
                     try {
-                        resolve(JSON.parse(result));
+                        if (result) {
+                            resolve(JSON.parse(result));
+                        } else {
+                            resolve([]);
+                        }
                     } catch (error) {
                         reject(error);
                     }

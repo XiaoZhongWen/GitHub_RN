@@ -41,6 +41,7 @@ export default class BaseItem extends Component {
     }
 
     renderFavoriteButton() {
+        const {theme} = this.props;
         return (
             <TouchableOpacity
                 onPress={() => this.onFavorite()}
@@ -49,7 +50,7 @@ export default class BaseItem extends Component {
                 <FontAwesome
                     name={this.state.isFavorite ? 'star' : 'star-o'}
                     size={26}
-                    style={{color: Setting.THEME_COLOR}}
+                    style={{color: theme.themeColor}}
                 />
             </TouchableOpacity>
         );
