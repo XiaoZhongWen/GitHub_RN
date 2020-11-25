@@ -6,6 +6,7 @@ import {
     FlatList,
     RefreshControl,
     ActivityIndicator,
+    TouchableOpacity,
 } from 'react-native';
 import {exp} from 'react-native/Libraries/Animated/src/Easing';
 import {createAppContainer} from 'react-navigation';
@@ -24,6 +25,8 @@ import FavoriteService from '../service/FavoriteService';
 import {FLAG_LANGUAGE} from '../expand/dao/LanguagesDao';
 import {onFlushPopularData} from '../action/popular';
 import {onLoadLanguageData} from '../action/Languages';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
 
@@ -59,6 +62,20 @@ class PopularPage extends Component {
         return tabs;
     }
 
+    onSearch() {
+        NavigationUtil.goPage({...this.props}, 'SearchPage');
+    }
+
+    renderRightButton() {
+        return (
+            <TouchableOpacity
+                style={{marginTop: 20, marginRight: 10}}
+                onPress={() => this.onSearch()}>
+                <Ionicons name={'ios-search'} size={26} color={'white'} />
+            </TouchableOpacity>
+        );
+    }
+
     render() {
         const {theme} = this.props;
         let statusBar = {
@@ -70,6 +87,7 @@ class PopularPage extends Component {
                 title={'最热'}
                 statusBar={statusBar}
                 style={theme.styles.navBar}
+                rightButton={this.renderRightButton()}
             />
         );
 

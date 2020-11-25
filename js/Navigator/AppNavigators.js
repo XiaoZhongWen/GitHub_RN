@@ -9,6 +9,7 @@ import CustomLanguage from '../page/CustomLanguage';
 import CustomTag from '../page/CustomTag';
 import CustomLanguageSort from '../page/CustomLanguageSort';
 import CustomTagSort from '../page/CustomTagSort';
+import SearchPage from '../page/SearchPage';
 
 const InitNavigator = createStackNavigator({
     Welcome: {
@@ -64,6 +65,12 @@ const MainNavigator = createStackNavigator({
     },
     CustomTagSort: {
         screen: CustomTagSort,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    SearchPage: {
+        screen: SearchPage,
         navigationOptions: {
             header: null,
         },
