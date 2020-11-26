@@ -8,7 +8,8 @@ import Setting from '../common/setting';
 export default class WebPage extends Component {
     constructor(props) {
         super(props);
-        const {title, url} = props.navigation.state.params;
+        const {title, url, theme} = props.navigation.state.params;
+        this.theme = theme;
         this.state = {
             title: title,
             url: url,
@@ -35,7 +36,7 @@ export default class WebPage extends Component {
             <NavigationBar
                 title={this.state.title}
                 leftButton={ViewUtil.leftButton(() => this.onBack())}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={this.theme.styles.navBar}
             />
         );
 

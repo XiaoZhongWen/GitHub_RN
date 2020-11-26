@@ -11,6 +11,9 @@ import actions from '../action';
 class CustomLanguage extends Component {
     constructor(props) {
         super(props);
+
+        const {theme} = props.navigation.state.params;
+        this.theme = theme;
         const {onLoadLanguageData} = props;
         onLoadLanguageData(FLAG_LANGUAGE.flag_language);
     }
@@ -29,6 +32,7 @@ class CustomLanguage extends Component {
                 <CheckBoxView
                     items={languages}
                     onChecked={(language) => this.onChecked(language)}
+                    theme={this.theme}
                 />
             );
         } else {
@@ -40,7 +44,7 @@ class CustomLanguage extends Component {
         const navigationBar = (
             <NavigationBar
                 title={'自定义语言'}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={{backgroundColor: this.theme.themeColor}}
             />
         );
         return (

@@ -6,6 +6,12 @@ import ViewUtil from '../../common/ViewUtil';
 import NavigationUtil from '../../Navigator/NavigationUtil';
 
 export default class AboutCommon extends Component {
+    constructor(props) {
+        super(props);
+        const {theme} = props.navigation.state.params;
+        this.theme = theme;
+    }
+
     getParallaxRenderConfig(params) {
         let config = {};
         config.renderBackground = () => (

@@ -11,6 +11,8 @@ import actions from '../action';
 class CustomTag extends Component {
     constructor(props) {
         super(props);
+        const {theme} = props.navigation.state.params;
+        this.theme = theme;
         const {onLoadLanguageData} = props;
         onLoadLanguageData(FLAG_LANGUAGE.flag_key);
     }
@@ -27,6 +29,7 @@ class CustomTag extends Component {
         if (keys && keys.length) {
             return (
                 <CheckBoxView
+                    theme={this.theme}
                     items={keys}
                     onChecked={(keys) => this.onChecked(keys)}
                 />
@@ -40,7 +43,7 @@ class CustomTag extends Component {
         const navigationBar = (
             <NavigationBar
                 title={'自定义标签'}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={this.theme.styles.navBar}
             />
         );
         return (

@@ -14,6 +14,10 @@ const window = Dimensions.get('window');
 class CustomLanguageSort extends Component {
     constructor(props) {
         super(props);
+
+        const {theme} = props.navigation.state.params;
+        this.theme = theme;
+
         this.state = {
             checkedLanguages: CustomLanguageSort.getCheckedLanguages(props),
         };
@@ -46,7 +50,7 @@ class CustomLanguageSort extends Component {
             <NavigationBar
                 title={'语言排序'}
                 rightButton={this.renderRightButton()}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={this.theme.styles.navBar}
             />
         );
 
@@ -79,7 +83,7 @@ class CustomLanguageSort extends Component {
     }
 
     _renderRow = ({data, active}) => {
-        return <SortCell data={data} active={active} />;
+        return <SortCell data={data} active={active} theme={this.theme} />;
     };
 
     onSave() {

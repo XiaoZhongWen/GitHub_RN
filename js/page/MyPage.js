@@ -18,7 +18,8 @@ import actions from '../action';
 
 class MyPage extends Component {
     onClick(m) {
-        let param = {};
+        const {theme} = this.props;
+        let param = {theme: theme};
         let routeName;
         switch (m) {
             case MENU.Tutorial:

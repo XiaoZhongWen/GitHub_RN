@@ -14,6 +14,9 @@ const window = Dimensions.get('window');
 class CustomTagSort extends Component {
     constructor(props) {
         super(props);
+
+        const {theme} = props.navigation.state.params;
+        this.theme = theme;
         this.state = {
             checkedKeys: CustomTagSort.getCheckedKeys(props),
         };
@@ -43,7 +46,7 @@ class CustomTagSort extends Component {
             <NavigationBar
                 title={'标签排序'}
                 rightButton={this.renderRightButton()}
-                style={{backgroundColor: Setting.THEME_COLOR}}
+                style={this.theme.styles.navBar}
             />
         );
 
@@ -76,7 +79,7 @@ class CustomTagSort extends Component {
     }
 
     _renderRow = ({data, active}) => {
-        return <SortCell data={data} active={active} />;
+        return <SortCell data={data} active={active} theme={this.theme} />;
     };
 
     onSave() {

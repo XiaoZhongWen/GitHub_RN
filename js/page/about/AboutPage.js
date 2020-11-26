@@ -11,16 +11,18 @@ export default class AboutPage extends Component {
     constructor(props) {
         super(props);
         this.aboutCommon = new AboutCommon(this.props);
+        const {theme} = props.navigation.state.params;
+        this.theme = theme;
     }
 
     render() {
         const contentView = (
             <View>
-                {ViewUtil.getMenuItem(MENU.Tutorial)}
+                {ViewUtil.getMenuItem(MENU.Tutorial, this.theme.themeColor)}
                 <View style={GlobalStyle.line} />
-                {ViewUtil.getMenuItem(MENU.About_Author)}
+                {ViewUtil.getMenuItem(MENU.About_Author, this.theme.themeColor)}
                 <View style={GlobalStyle.line} />
-                {ViewUtil.getMenuItem(MENU.Feedback)}
+                {ViewUtil.getMenuItem(MENU.Feedback, this.theme.themeColor)}
                 <View style={GlobalStyle.line} />
             </View>
         );

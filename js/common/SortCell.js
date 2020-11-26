@@ -15,6 +15,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 export default class SortCell extends Component {
     constructor(props) {
         super(props);
+        const {theme} = this.props;
+        this.theme = theme;
         this._active = new Animated.Value(0);
         this._style = {
             ...Platform.select({
@@ -69,6 +71,7 @@ export default class SortCell extends Component {
                         <MaterialCommunityIcons
                             name={'sort'}
                             size={16}
+                            color={this.theme.themeColor}
                             style={{marginRight: 10}}
                         />
                         <Text>{this.props.data.name}</Text>

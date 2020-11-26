@@ -11,6 +11,8 @@ export default class CheckBoxView extends Component {
         // this.state = {
         //     items: items,
         // };
+        const {theme} = this.props;
+        this.theme = theme;
     }
 
     _checkedImage(checked) {
@@ -19,7 +21,7 @@ export default class CheckBoxView extends Component {
                 name={checked ? 'ios-checkbox' : 'md-square-outline'}
                 size={20}
                 style={{
-                    color: Setting.THEME_COLOR,
+                    color: this.theme.themeColor,
                 }}
             />
         );
