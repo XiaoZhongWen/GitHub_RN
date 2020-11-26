@@ -30,7 +30,7 @@ class SearchPage extends Component {
         this.inputKey = '';
         this.favoriteKey = '';
         this.addFavorite = false;
-        this.languagesDao = new FavoriteDao(FLAG_LANGUAGE.flag_key);
+        this.languagesDao = new LanguagesDao(FLAG_LANGUAGE.flag_key);
     }
 
     onBack() {
@@ -158,14 +158,13 @@ class SearchPage extends Component {
         if (this.isFavorite_()) {
             this.toast.show(this.favoriteKey + '已经存在');
         } else {
-            key = {
+            const key = {
                 path: this.favoriteKey,
                 name: this.favoriteKey,
                 checked: true,
             };
-            const {keys} = this.props;
-            keys.unshft(key);
-            this.languagesDao.save(keys);
+            this.keys.unshift(key);
+            this.languagesDao.save(this.keys);
             this.addFavorite = true;
             this.toast.show('添加成功');
         }
